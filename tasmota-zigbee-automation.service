@@ -1,0 +1,13 @@
+[Unit]
+Description=tastmota-zigbee-automation
+After=network.target
+
+[Service]
+ExecStart=/home/git/tastmota-zigbee-automation/venv/bin/python run.py
+WorkingDirectory=/home/git/tastmota-zigbee-automation/
+StandardOutput=inherit
+StandardError=inherit
+User=chevah
+
+[Install]
+WantedBy=multi-user.target

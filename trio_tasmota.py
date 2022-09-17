@@ -143,6 +143,7 @@ class TasmotaAdapter:
 
     def __init__(self, address, bridge_name, sensors):
 
+        self._bridge_name = bridge_name
         self._topics = _get_topics(bridge_name)
         self._sensor_callbacks = sensors()
 
@@ -172,37 +173,40 @@ class TasmotaAdapter:
         _log("Disconnect result {}".format(rc))
 
 
-async def zb_power(client, device, state):
-    """
-    Send power command for Tasmota `device`.
-    """
-    payload = {
-        "Send": {"Power": state},
-    }
-    await zb_send(client, device, payload)
+    async def zb_power(self, device, state):
+        """
+        Send power command for Tasmota `device`.
+        """
+        payload = {
+            "Send": {"Power": state},
+        }
+        await self.zb_send(device, payload)
 
 
-async def zb_dim(client, device, value):
-    payload = {
-        "Send": {"Dimmer": int(value)},
-    }
-    await zb_send(client, device, payload)
+    async def zb_dim(self, device, value):
+        """
+        Send linght dimmer command to Tasmota `device`.
+        """
+        payload = {
+            "Send": {"Dimmer": int(value)},
+        }
+        await self.zb_send(device, payload)
 
 
-async def zb_send(client, device, payload):
-    """
-    Topic = cmnd/ZigbeeGateway/ZbSend
-    Payload = {"Device":"0x1234","Send":{"Power":0}} or {"Device":"0x1234","Write":{"Power":0}}
-    """
-    command = {
-        "Device": device,
-    }
-    command.update(payload)
-    _log("Sending to bridge: {}".format(command))
-    await client.publish(
-        "cmnd/{}/ZbSend".format(BRIDGE_NAME),
-        json.dumps(command),
-    )
+    async def zb_send(self, device, payload):
+        """
+        Topic = cmnd/ZigbeeGateway/ZbSend
+        Payload = {"Device":"0x1234","Send":{"Power":0}} or {"Device":"0x1234","Write":{"Power":0}}
+        """
+        command = {
+            "Device": device,
+        }
+        command.update(payload)
+        _log("Sending to bridge: {}".format(command))
+        await self._trio_mqtt.publish(
+            "cmnd/{}/ZbSend".format(self._bridge_name),
+            json.dumps(command),
+        )
 
 
 def _log(text):

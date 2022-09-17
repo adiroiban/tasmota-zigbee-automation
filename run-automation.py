@@ -7,7 +7,7 @@ import time
 
 import trio
 
-from trio_tasmota import TasmotaAdapter, zb_dim
+from trio_tasmota import TasmotaAdapter
 
 BRIDGE_NAME = "tasmota_zbBridge"
 HOST = "172.19.0.31"
@@ -31,8 +31,10 @@ ikea_move1_last = 0
 
 
 async def on_light_sensor(client, payload):
-    """ """
-    await zb_dim(client, LIGHT_STAIRS, 12)
+    """
+    Called when we got a new stat from the light sensor.
+    """
+    await tasmota.zb_dim(LIGHT_STAIRS, 12)
 
 
 async def on_ikea_action1(client, payload):
@@ -94,5 +96,6 @@ def _log(text):
 
 
 _log("Starting")
-TasmotaAdapter(MQTT_ADDRESS, BRIDGE_NAME, get_sensors).loop()
+tasmota = TasmotaAdapter(MQTT_ADDRESS, BRIDGE_NAME, get_sensors)
+tasmota.loop()
 _log("Finished")

@@ -5,6 +5,7 @@ import json
 import sys
 import time
 
+import  httpx
 import trio
 
 from trio_tasmota import TasmotaAdapter
@@ -14,15 +15,26 @@ HOST = "172.19.0.31"
 MQTT_ADDRESS = HOST
 GOOGLE_URL = "http://{}:3000".format(HOST)
 
+# Action to controllor cat litter vacuum.
 LITTER_BUTTON = "0xF2F3"
+# Ikea light sensonr
 LIGHT_SENSOR = "0x961B"
+# Light bulb from the stairs
 LIGHT_STAIRS = "0x37CA"
+# Ikea 2 buttons for office room.
+SWITCH_1 = "0x999D"
+
+EVENT_IKEA_BUTTON_0_SHORT = "0006!00"
+EVENT_IKEA_BUTTON_1_SHORT = "0006!01"
+
+EVENT_IKEA_BUTTON_1_LONG_START = '0008!05'
 
 
 def get_sensors():
     return {
         LITTER_BUTTON: on_ikea_action1,
         LIGHT_SENSOR: on_light_sensor,
+        SWITCH_1: on_switch_1,
     }
 
 
@@ -34,19 +46,25 @@ async def on_light_sensor(client, payload):
     """
     Called when we got a new stat from the light sensor.
     """
-    await tasmota.zb_dim(LIGHT_STAIRS, 12)
+    #await tasmota.zb_dim(LIGHT_STAIRS, 12)
+
+async def on_switch_1(client, payload):
+    """
+    Called when switch 1 was pressed
+    """
+    if EVENT_IKEA_BUTTON_1_SHORT in payload:
+        return await google_home("say hi", cast=True)
+
 
 
 async def on_ikea_action1(client, payload):
     """ """
     global ikea_action1_down_start
-    if "action" not in payload:
-        return
 
-    if payload["action"] == "on":
+    if EVENT_IKEA_BUTTON_1_SHORT in payload:
         return await google_home("start vacuuming the hall")
 
-    if payload["action"] == "brightness_move_up":
+    if EVENT_IKEA_BUTTON_1_LONG_START in payload:
         # Long press started.
         ikea_action1_down_start = time.time()
         return
@@ -54,7 +72,7 @@ async def on_ikea_action1(client, payload):
     # Most probabling long press released.
     duration = time.time() - ikea_action1_down_start
 
-    if duration > 2:
+    if duration > 1.5:
         # THe button down has a delay... so this is on top of that.
         return await google_home("tell roomba to go home")
 
@@ -74,21 +92,50 @@ async def on_ikea_move1(client, payload):
     _log("go with move " + str(payload))
 
 
-async def google_home(command, broadcast=False, converse=False):
+async def google_home(command, broadcast=False, converse=False, cast=False):
     """
-    Send a command to Google home via assistant relay
+    Send a command to Google home via assistant relay.
     """
     _log("Sending to Google " + command)
-    return
     payload = {
         "user": "adi",
         "command": command,
         "broadcast": broadcast,
-        "converse": coverse,
+        "converse": converse,
     }
-    payload.update(command)
-    r = httpx.post(GOOGLE_URL + "/assistant", json=payload)
-    _log("Response from Google " + str(r.text))
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                GOOGLE_URL + "/assistant",
+                json=payload,
+                # It can take a long time for assitant relay to respond.
+                timeout=30,
+                )
+        _log("Response from Google " + str(response.text))
+    except Exception as error:
+        _log("Faild to cast:\n" + str(error))
+        return
+
+    if not cast:
+        return
+
+    payload = {
+        "device": "Office speaker",
+        "source": "{}{}".format(GOOGLE_URL, response.json()['audio']),
+        "type": "remote",
+        }
+
+    try:
+        async with httpx.AsyncClient() as client:
+            r = await client.post(
+                GOOGLE_URL + "/cast",
+                json=payload,
+                # It can take a long time for assitant relay to respond.
+                timeout=30,
+                )
+        _log("Response from cast " + str(r.text))
+    except Exception as error:
+        _log("Faild to cast:\n" + str(error))
 
 
 def _log(text):

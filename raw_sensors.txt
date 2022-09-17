@@ -1,0 +1,89 @@
+Raw sensor data for various devices
+
+------------
+
+ikea move sensor
+
+17:58:05.816 MQT: tele/tasmota_zbBridge/SENSOR = {"ZbReceived":{"0x4C11":{"Device":"0x4C11","Name":"move-1","0006!42":"0008070000","Power":1,"PowerOnlyWhenOn":0,"PowerOnTime":180,"PowerOffWait":0,"Endpoint":1,"LinkQuality":100}}}
+
+
+----------
+
+Ikea 2 buttons
+
+
+    button 1 short
+    b'{"ZbReceived":{"0x999D":{"Device":"0x999D","Name":" 2buttons-1","0006!01":"","Power":1,"Endpoint":1,"LinkQuality":79}}}'
+
+    botton 0 short
+    b'{"ZbReceived":{"0x999D":{"Device":"0x999D","Name":" 2buttons-1","0006!00":"","Power":0,"Endpoint":1,"LinkQuality":107}}}'
+
+    button 1 long start
+    b'{"ZbReceived":{"0x999D":{"Device":"0x999D","Name":" 2buttons-1","0008!05":"0053","DimmerMove":0,"Endpoint":1,"LinkQuality":76}}}'
+
+    button 0 long start
+    b'{"ZbReceived":{"0x999D":{"Device":"0x999D","Name":" 2buttons-1","0008!01":"01530000","DimmerMove":1,"Endpoint":1,"LinkQuality":113}}}'
+
+    button any long end
+    '{"ZbReceived":{"0x999D":{"Device":"0x999D","Name":" 2buttons-1","0008!07":"","DimmerStop":true,"Endpoint":1,"LinkQuality":84}}}'
+
+
+-----------
+
+Ikea stybar 4 buttons
+
+ UP
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0006!01":"","Power":1,"Endpoint":1,"LinkQuality":50}}}'
+
+DOWN
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0006!00":"","Power":0,"Endpoint":1,"LinkQuality":76}}}'
+
+LEFT
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0005!07":"01010D00","ArrowClick":1,"Endpoint":1,"LinkQuality":81}}}'
+
+RIGHT
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0005!07":"00010D00","ArrowClick":0,"Endpoint":1,"LinkQuality":81}}}'
+
+
+UP LONG
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0008!05":"0053","DimmerMove":0,"Endpoint":1,"LinkQuality":87}}}'
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0008!07":"","DimmerStop":true,"Endpoint":1,"LinkQuality":94}}}'
+
+
+DOWN LONG
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0008!01":"01530000","DimmerMove":1,"Endpoint":1,"LinkQuality":45}}}'
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0008!07":"","DimmerStop":true,"Endpoint":1,"LinkQuality":87}}}'
+
+
+RIGHT LONG
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0005!09":"0000","ArrowRelease":true,"Endpoint":1,"LinkQuality":94}}}'
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0006!01":"","Power":1,"Endpoint":1,"LinkQuality":92}}}'
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0005!07":"02000000","ArrowClick":2,"Endpoint":1,"LinkQuality":94}}}'
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x961B":{"Device":"0x961B","Name":" light-sensor-1","Illuminance":28797,"Endpoint":1,"LinkQuality":152}}}'
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0005!08":"010D00","ArrowHold":1,"Endpoint":1,"LinkQuality":92}}}'
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0005!09":"F903","ArrowRelease":true,"Endpoint":1,"LinkQuality":94}}}'
+
+
+
+LEFT LONG
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0005!09":"0000","ArrowRelease":true,"Endpoint":1,"LinkQuality":68}}}'
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0006!01":"","Power":1,"Endpoint":1,"LinkQuality":71}}}'
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0005!07":"02000000","ArrowClick":2,"Endpoint":1,"LinkQuality":71}}}'
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0005!08":"000D00","ArrowHold":0,"Endpoint":1,"LinkQuality":100}}}'
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0x60C2":{"Device":"0x60C2","Name":" 4buttons-1","0005!09":"EB6E","ArrowRelease":true,"Endpoint":1,"LinkQuality":105}}}'
+
+----------
+
+Ikea action button
+
+
+short press
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0xF2F3":{"Device":"0xF2F3","Name":" action-1","0006!01":"","Power":1,"Endpoint":1,"LinkQuality":107}}}'
+
+
+
+long press start
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0xF2F3":{"Device":"0xF2F3","Name":" action-1","0008!05":"0053","DimmerMove":0,"Endpoint":1,"LinkQuality":105}}}'
+
+long press end
+Got message on tele/tasmota_zbBridge/SENSOR: b'{"ZbReceived":{"0xF2F3":{"Device":"0xF2F3","Name":" action-1","0008!07":"","DimmerStop":true,"Endpoint":1,"LinkQuality":102}}}'

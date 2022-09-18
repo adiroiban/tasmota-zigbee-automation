@@ -23,6 +23,8 @@ LIGHT_SENSOR = "0x961B"
 LIGHT_STAIRS = "0x37CA"
 # Ikea 2 buttons for office room.
 SWITCH_1 = "0x999D"
+# Ikea 2 buttons for down control room.
+SWITCH_2 = "0xEB2D"
 
 EVENT_IKEA_BUTTON_0_SHORT = "0006!00"
 EVENT_IKEA_BUTTON_1_SHORT = "0006!01"
@@ -33,7 +35,7 @@ EVENT_IKEA_BUTTON_1_LONG_START = '0008!05'
 def get_sensors():
     return {
         LITTER_BUTTON: on_ikea_action1,
-        LIGHT_SENSOR: on_light_sensor,
+        SWITCH_1: on_switch_1,
         SWITCH_1: on_switch_1,
     }
 
@@ -42,18 +44,40 @@ ikea_action1_down_start = 0
 ikea_move1_last = 0
 
 
-async def on_light_sensor(client, payload):
-    """
-    Called when we got a new stat from the light sensor.
-    """
-    #await tasmota.zb_dim(LIGHT_STAIRS, 12)
+# Helper to detect long press.
+ikea_long_start = 0, 0
 
 async def on_switch_1(client, payload):
     """
     Called when switch 1 was pressed
     """
+    global ikea_long_start
     if EVENT_IKEA_BUTTON_1_SHORT in payload:
-        return await google_home("say hi", cast=True)
+        return await tasmota.zb_power(LIGHT_STAIRS, 2)
+
+    if EVENT_IKEA_BUTTON_0_SHORT in payload:
+        # Do nothing
+        return
+
+    if 'DimmerMove' in payload:
+        # Start for long press.
+        ikea_long_start = time.time(), payload['DimmerMove']
+        return
+
+    start_time, dimmer_move = ikea_long_start
+    # Most probabling long press released.
+    # Maximum value is like 5 seconds.
+    duration = min(time.time() - start_time, 1)
+    _log("Duration " + str(duration))
+
+    direction = 1
+    if dimmer_move == 1:
+        direction = -0.8
+
+    offset = duration * 128
+
+    dim = 127 + direction * offset
+    return await tasmota.zb_dim(LIGHT_STAIRS, dim)
 
 
 

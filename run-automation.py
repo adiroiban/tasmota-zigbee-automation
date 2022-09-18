@@ -36,7 +36,7 @@ def get_sensors():
     return {
         LITTER_BUTTON: on_ikea_action1,
         SWITCH_1: on_switch_1,
-        SWITCH_1: on_switch_1,
+        SWITCH_2: on_switch_1,
     }
 
 

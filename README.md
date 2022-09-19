@@ -1,16 +1,18 @@
 # tasmota-zigbee-automation
 Home automation based on Tasmota zibgee bridge and Python3.
 
-This is the code I use for my home automation.
+This is the code I use as a test for my home automation.
 
 It is based on zigbee.
 
 Designed to be executed on RPI, with mosquito and assistant relay.
 
-For now, I have a Sonnof zigbee-wifi bridge.
+It is designed to be used with Sonnof zigbee-wifi bridge and Sonnof native MQTT interface.
 
-The plan is to move to an USB zibgee stick,
-but now I have only a cheap CC2531 USB dongle that is trash/not usable.
+There is not much here as I am not using Home Assistant, so this is no longer used.
+
+This is still useful for very simple automation or industrial automation, when you don't want the full power of Home Assistant
+or want to run it on a low-power device.
 
 This is carpe-diem development.
 No automated test.
